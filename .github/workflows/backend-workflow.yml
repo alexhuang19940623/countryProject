@@ -30,6 +30,20 @@ jobs:
         with:
           name: node-app
           path: backend  # 注意这里
+          
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run build --if-present
+          npm run test --if-present
+        working-directory: frontend  # 注意这里
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: node-app
+          path: frontend  # 注意这里
+                    
 
   deploy:
     runs-on: ubuntu-latest
