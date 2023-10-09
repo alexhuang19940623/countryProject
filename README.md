@@ -29,7 +29,7 @@ countryProject
    │  └─ manifest.json
    └─ src
       ├─ App.js
-      ├─ commpont
+      ├─ component
       │  ├─ Footer.js
       │  └─ Header.js
       ├─ index.css
