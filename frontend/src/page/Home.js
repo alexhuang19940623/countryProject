@@ -1,8 +1,8 @@
 import React, { useState,useEffect, useMemo } from "react";
 import { notification } from 'antd';
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import Header from '../commpont/Header';
-import Footer from '../commpont/Footer';
+import Header from '../component/Header';
+import Footer from '../component/Footer';
 import '../style.css';
 import axios from 'axios';
   
