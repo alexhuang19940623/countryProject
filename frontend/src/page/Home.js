@@ -17,10 +17,13 @@ function Home() {
     });
   };
 
+  // Define the api
+  const apiUrl =process.env.REACT_APP_API_URL;
+
   let handleSubmit = e => {
     e.preventDefault();
     if(text!=""){
-      axios.post('http://127.0.0.1:8000/api/country', {
+      axios.post(`${apiUrl}/api/country`, {
         "countryText":text
       }).then(response => {
          openNotificationWithIcon('success','Search Tips',"Search Successfully!");
