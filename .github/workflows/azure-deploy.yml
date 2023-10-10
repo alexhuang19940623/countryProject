@@ -18,11 +18,22 @@ jobs:
       with:
         node-version: '18.x'  # Set your Node.js version
 
-    - name: Install Dependencies
+    - name: Install backend Dependencies
       run: npm install
+      working-directory: backend
 
     - name: Build
       run: npm run build  # If you have a build script in your package.json
+      working-directory: backend
+
+    - name: Install frontend Dependencies
+      run: npm install
+      working-directory: frontend
+
+    - name: Build
+      run: npm run build  # If you have a build script in your package.json
+      working-directory: backend
+
 
     - name: Deploy to Azure
       uses: azure/webapps-deploy@v2
