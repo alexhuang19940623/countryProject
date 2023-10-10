@@ -17,13 +17,10 @@ function Home() {
     });
   };
 
-  // Define the api
-  const apiUrl =process.env.REACT_APP_API_URL;
-
   let handleSubmit = e => {
     e.preventDefault();
     if(text!=""){
-      axios.post(`${apiUrl}/api/country`, {
+      axios.post('http://countrytianyu.azurewebsites.net/api/country', {
         "countryText":text
       }).then(response => {
          openNotificationWithIcon('success','Search Tips',"Search Successfully!");
