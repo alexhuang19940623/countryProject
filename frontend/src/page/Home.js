@@ -20,7 +20,7 @@ function Home() {
   let handleSubmit = e => {
     e.preventDefault();
     if(text!=""){
-      axios.post('http://countrytianyu.azurewebsites.net/api/country', {
+      axios.post('http://127.0.0.1:8000/api/country', {
         "countryText":text
       }).then(response => {
          openNotificationWithIcon('success','Search Tips',"Search Successfully!");
