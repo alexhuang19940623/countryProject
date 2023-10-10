@@ -1,4 +1,4 @@
-name: Build and deploy Node.js app to Azure Web App - tianyuproject1
+name: Optimized Build and Deploy to Azure
 
 on:
   push:
@@ -12,28 +12,53 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
+      
       - name: Set up Node.js version
         uses: actions/setup-node@v1
         with:
           node-version: '18.x'
-
+      
+      # Cache node_modules for backend
+      - name: Cache backend node modules
+        uses: actions/cache@v2
+        with:
+          path: backend/node_modules
+          key: backend-${{ hashFiles('backend/package-lock.json') }}
+          restore-keys: |
+            backend-${{ hashFiles('backend/package-lock.json') }}
+      
+      # Install backend dependencies only if cache miss
       - name: Install Backend Dependencies
-        run: |
-          npm install
-        working-directory: backend 
-
-      - name: Install Frontend Dependencies and Build
-        run: |
-          npm install
-          npm run build
-        working-directory: frontend 
-
-      - name: Upload artifact for deployment job
+        if: steps.cache-backend.outputs.cache-hit != 'true'
+        run: npm install
+        working-directory: backend
+      
+      # Cache node_modules for frontend
+      - name: Cache frontend node modules
+        uses: actions/cache@v2
+        with:
+          path: frontend/node_modules
+          key: frontend-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            frontend-${{ hashFiles('frontend/package-lock.json') }}
+      
+      # Install frontend dependencies only if cache miss
+      - name: Install Frontend Dependencies
+        if: steps.cache-frontend.outputs.cache-hit != 'true'
+        run: npm install
+        working-directory: frontend
+      
+      # Build the frontend
+      - name: Build Frontend
+        run: npm run build
+        working-directory: frontend
+      
+      # Upload only the necessary artifacts for deployment (e.g., frontend build output)
+      - name: Upload build artifacts for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: .
+          path: frontend/build
 
   deploy:
     runs-on: ubuntu-latest
@@ -41,14 +66,14 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
+    
     steps:
-      - name: Download artifact from build job
+      - name: Download build artifacts from build job
         uses: actions/download-artifact@v2
         with:
           name: node-app
-
-      - name: 'Deploy to Azure Web App'
+      
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
@@ -56,4 +81,3 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2F571812726A4459B20063251B13905B }}
           package: .
-          
