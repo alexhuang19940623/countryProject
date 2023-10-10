@@ -19,7 +19,7 @@ function Home() {
 
   let handleSubmit = e => {
     e.preventDefault();
-    if(text!=""){
+    if(text!=""){// http://127.0.0.1:8000/api/country
       axios.post('https://countrytianyu.azurewebsites.net/api/country', {
         "countryText":text
       }).then(response => {
