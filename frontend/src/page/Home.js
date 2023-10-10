@@ -20,7 +20,7 @@ function Home() {
   let handleSubmit = e => {
     e.preventDefault();
     if(text!=""){
-      axios.post('http://127.0.0.1:8000/api/country', {
+      axios.post('http://20.105.216.13/api/country', {
         "countryText":text
       }).then(response => {
          openNotificationWithIcon('success','Search Tips',"Search Successfully!");

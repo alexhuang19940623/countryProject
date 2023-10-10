@@ -13,7 +13,7 @@ const app = express()
 app.use(morgan('dev')); //print out route method and its status e.g. GET 200
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({limit:'2mb'})); //pass json data to js, set limit to data sent by client
-app.use(cors()); //cross origin
+app.use(cors({origin: "https://proud-pond-0c3330d03.3.azurestaticapps.net"})); //cross origin
 
 
 app.use((req, res, next) => {
