@@ -1,20 +1,19 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const morgan=require('morgan');
-const {readdirSync} = require('fs'); // give access to the file system
+const morgan = require('morgan');
+const { readdirSync } = require('fs'); // give access to the file system
+const path = require('path'); // Added to handle file paths
 require('dotenv').config()
 
-//app
+// app
 const app = express()
 
-
-//middlewares 
-app.use(morgan('dev')); //print out route method and its status e.g. GET 200
+// middlewares 
+app.use(morgan('dev')); 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json({limit:'2mb'})); //pass json data to js, set limit to data sent by client
-app.use(cors()); //cross origin
-
+app.use(bodyParser.json({ limit: '2mb' }));
+app.use(cors()); // cross origin
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -26,11 +25,17 @@ app.use((req, res, next) => {
   next();
 });
 
-//route middleware - access file without having to require each time
+// route middleware
 readdirSync('./routes').map((r) => app.use('/api', require('./routes/' + r)))
 
+// Serve static files
+app.use(express.static(path.join(__dirname, '../frontend/build')))
 
+// send back the index.html file
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'))
+})
 
-//port
+// port
 const port = process.env.PORT || 8000;
 app.listen(port, () => console.log(`Server is running on port ${port}`));
